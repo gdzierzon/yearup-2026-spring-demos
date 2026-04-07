@@ -26,8 +26,8 @@ public class Main
             int remainder = decimal % 2;
             decimal /= 2;
 
-//            System.out.print("decimal: " + decimal);
-//            System.out.println(" -> remainder: " + remainder);
+        //            System.out.print("decimal: " + decimal);
+        //            System.out.println(" -> remainder: " + remainder);
 
             binary.push(remainder);
 
