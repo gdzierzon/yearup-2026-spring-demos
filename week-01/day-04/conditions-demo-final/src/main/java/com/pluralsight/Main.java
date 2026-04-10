@@ -46,7 +46,7 @@ public class Main
 
         if (selectedDay == MONDAY)
         {
-            System.out.println("Eat at Arbys");
+            System.out.println("Eat at Arby's");
         }
         else if(selectedDay == TUESDAY && hasMoney.equalsIgnoreCase("y"))
         {
