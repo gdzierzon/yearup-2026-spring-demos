@@ -8,6 +8,8 @@ public class Main
 {
     static Scanner scanner = new Scanner(System.in);
 
+
+
     static void main()
     {
         // see the original "main" method at the end of this file
