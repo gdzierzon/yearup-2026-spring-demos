@@ -5,6 +5,6 @@ public class ArraysDemo
 {
     static void main()
     {
-        
+
     }
 }
