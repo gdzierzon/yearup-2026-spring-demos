@@ -39,7 +39,7 @@ public class Main
     public static Person getNewPerson()
     {
         Scanner userInput = new Scanner(System.in);
-        
+
 
         System.out.print("Enter your name: ");
         String name = userInput.nextLine().trim();
