@@ -52,5 +52,17 @@ public class Demos
 
         }while(keepGoing.equalsIgnoreCase("y"));
 
+
+
+
+        int[] prices = { 5, 3, 18, 4 };
+        prices[2] = 1;
+
+        for(int index = 0; index < prices.length; index++)
+        {
+            int price = prices[index];
+            System.out.print(price + " ");
+        }
+
     }
 }
