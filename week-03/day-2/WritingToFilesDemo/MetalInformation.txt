@@ -1,0 +1,24 @@
+Mercury         silvery              -38.00     318.00  
+Gallium         silvery              86.00      2042.50 
+Cesium          golden               83.00      661.50  
+Rubidium        silvery              103.00     688.50  
+Potassium       silvery              146.00     764.00  
+Sodium          silvery              208.00     914.50  
+Indium          silvery              314.00     2038.00 
+Tin             silvery              450.00     2583.00 
+Bismuth         iridescent           520.00     1683.50 
+Lead            dull gray            621.00     1901.50 
+Zinc            bluish silver        787.00     1226.00 
+Magnesium       silvery              1202.00    1598.00 
+Aluminum        silvery              1221.00    2847.00 
+Silver          silver               1763.00    2843.50 
+Gold            gold                 1948.00    3663.50 
+Copper          reddish              1984.00    3318.00 
+Nickel          silvery              2651.00    3783.00 
+Cobalt          bluish               2723.00    4012.00 
+Palladium       silvery              2831.00    4095.50 
+Titanium        gray                 3034.00    4491.50 
+Platinum        silvery              3215.00    5066.00 
+Chromium        steel gray           3465.00    4152.50 
+Molybdenum      gray                 4753.00    6567.50 
+Tungsten        gray                 6192.00    8111.50 
