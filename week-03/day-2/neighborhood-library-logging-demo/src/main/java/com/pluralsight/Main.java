@@ -96,7 +96,7 @@ public class Main
         while(true)
         {
             logAction("SHOW CHECKED OUT","");
-            
+
             // display books
             System.out.println("Id  Title                                              ISBN                 Checked Out To");
             System.out.println("--- -------------------------------------------------- -------------------- --------------");
