@@ -23,7 +23,7 @@ public class StoreApplication
         while(true)
         {
             System.out.println();
-            System.out.println("Welcome to the Store Application!");
+            System.out.println("Welcome to my Store!");
             System.out.println("---------------------------------");
             System.out.println();
             System.out.println("D) Display Products");
@@ -54,14 +54,14 @@ public class StoreApplication
 
     static ArrayList<Product> loadProducts()
     {
-        // 1. create the new ArrayList container
+        // 1. create the new ArrayList
         ArrayList<Product> products = new ArrayList<>();
 
-        // 2. populate the container
+        // 2. populate the list
         // load all products from the "data/products.csv" file here
 
 
-        // 3. return the ArrayList container
+        // 3. return the ArrayList
         return products;
     }
 }
