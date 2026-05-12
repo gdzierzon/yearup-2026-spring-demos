@@ -54,7 +54,8 @@ public class Character
         System.out.println(this.name + " attacks " + target.getName());
 
         // Basic attack logic, e.g., reducing the target's health
-        target.takeDamage(attackDamage); // Example damage value
+        int damage = attackDamage * level;
+        target.takeDamage(damage); // Example damage value
     }
 
     public void takeDamage(int damage)
@@ -82,6 +83,7 @@ public class Character
         this.level++;
         this.health += 10;
         System.out.println(this.name + " has leveled up to level " + this.level + "!");
+        System.out.println(this.name + " has " + this.health + " health remaining.");
     }
 
     public void specialAbility()

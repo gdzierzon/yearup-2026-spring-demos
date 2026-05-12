@@ -1,33 +1,37 @@
 package com.pluralsight.shapes;
 
-
 public class Circle extends Square
 {
-    public double getRadius()
+
+    public  Circle(double radius)
     {
-        return super.getHeight() / 2;
+        super(radius * 2);
     }
 
     public double getDiameter()
     {
-        return getHeight();
+        return super.getWidth();
     }
 
-    public Circle(double radius)
+    public double getRadius()
     {
-        super(radius * 2);
+        return getDiameter() / 2;
     }
 
     @Override
     public double getArea()
     {
-        //return super.getArea() * Math.PI / 4;
+        // area of a circle = PI * r (squared)
+//        return Math.PI * getRadius() * getRadius();
         return Math.PI * Math.pow(getRadius(), 2);
     }
 
     @Override
     public double getPerimeter()
     {
-        return 2 * Math.PI * getRadius();
+        // perimeter = 2 * PI * r
+//        return Math.PI * 2 * getRadius();
+        return Math.PI * getDiameter();
     }
+
 }

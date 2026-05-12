@@ -4,24 +4,26 @@ public class Shapes
 {
     public static void main(String[] args)
     {
-        System.out.println("Rectangle: ");
-        System.out.println("-".repeat(15));
-        Rectangle rectangle = new Rectangle(15,30);
-        System.out.println(rectangle.getWidth() + " x " + rectangle.getHeight());
+        Rectangle rectangle = new Rectangle(15, 20);
+//        rectangle.setHeight(15);
+//        rectangle.setWidth(20);
+
+        System.out.println("Rectangle area: " + rectangle.getArea());
+        System.out.println("Rectangle perimeter: " + rectangle.getPerimeter());
 
         System.out.println();
-        System.out.println("Square: ");
-        System.out.println("-".repeat(15));
-        Square square = new Square(13);
-        System.out.println(square.getWidth() + " x " + square.getHeight());
-        System.out.println("Area: " + square.getArea());
-        System.out.println("Perimeter: " + square.getPerimeter());
+        Square square = new Square(10);
+//        square.setHeight(10);
+//        square.setWidth(15);
+
+        System.out.println("Square area: " + square.getArea());
+        System.out.println("Square perimeter: " + square.getPerimeter());
 
         System.out.println();
-        System.out.println("Circle: ");
-        System.out.println("-".repeat(15));
-        Circle circle = new Circle(6.5);
-        System.out.println("Area: " + circle.getArea());
-        System.out.println("Perimeter: " + circle.getPerimeter());
+        Circle circle = new Circle(5);
+        System.out.println("Circle radius: " + circle.getRadius());
+        System.out.println("Circle diameter: " + circle.getDiameter());
+        System.out.println("Circle area: " + circle.getArea());
+        System.out.println("Circle perimeter: " + circle.getPerimeter());
     }
 }
