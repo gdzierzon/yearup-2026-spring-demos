@@ -4,10 +4,10 @@ public class Character
 {
     protected static final int attackDamage = 10;
 
-    protected String name;
-    protected int health;
-    protected int level;
-    protected int experience;
+    private String name;
+    private int health;
+    private int level;
+    private int experience;
 
 
     public boolean isDefeated()
