@@ -42,6 +42,11 @@ public class Character
         return defenseMultiplier;
     }
 
+    protected void setDefenseMultiplier(int defenseMultiplier)
+    {
+        this.defenseMultiplier = defenseMultiplier;
+    }
+
     public int getExperience()
     {
         return experience;
@@ -87,6 +92,9 @@ public class Character
         int actualDamage = damage / defenseMultiplier;
         if(actualDamage < 1) actualDamage = 1;
 
+        System.out.println(getName() + " has " + getHealth() + " health before the attack.");
+        System.out.println(getName() + " takes " + actualDamage + " damage");
+
         this.health -= actualDamage;
         if (isDefeated())
         {
@@ -111,6 +119,12 @@ public class Character
         this.health += 10;
         System.out.println(this.name + " has leveled up to level " + this.level + "!");
         System.out.println(this.name + " has " + this.health + " health remaining.");
+        specialAbility();
+    }
+
+    public void increaseAttackMultiplier()
+    {
+        attackMultiplier++;
     }
 
     public void specialAbility()

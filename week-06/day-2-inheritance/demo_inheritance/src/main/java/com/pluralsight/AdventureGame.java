@@ -2,37 +2,41 @@ package com.pluralsight;
 
 import com.pluralsight.adventure.Archer;
 import com.pluralsight.adventure.Character;
+import com.pluralsight.adventure.Knight;
 
 public class AdventureGame
 {
     public static void main(String[] args)
     {
-        Archer hero = new Archer("Hero", 50, 1, 100, 10);
-        Character villain = new Character("Villain", 50,1,100);
+        Character character = new Character("Character", 50,1,100);
+        Archer archer = new Archer("Archer", 50, 1, 100, 10);
+        Knight knight = new Knight("Knight", 50, 1, 100, 2);
 
         System.out.println();
 
-        hero.attack(villain);
+        character.specialAbility();
+        archer.specialAbility();
+        knight.specialAbility();
+
         System.out.println();
 
-        villain.attack(hero);
-        villain.attack(hero);
+        archer.attack(character);
         System.out.println();
 
-        hero.addArrow();
-        hero.addArrow();
-        hero.attack(villain);
+        character.attack(archer);
+        character.attack(archer);
         System.out.println();
 
-        villain.attack(hero);
-        villain.attack(hero);
-        villain.attack(hero);
+        archer.addArrow();
+        archer.addArrow();
+
+        archer.levelUp();
         System.out.println();
 
-        hero.levelUp();
+        archer.attack(knight);
         System.out.println();
 
-        hero.attack(villain);
+        knight.attack(archer);
         System.out.println();
 
 
