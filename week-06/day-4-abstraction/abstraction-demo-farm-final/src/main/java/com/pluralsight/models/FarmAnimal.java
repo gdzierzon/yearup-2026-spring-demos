@@ -1,6 +1,6 @@
 package com.pluralsight.models;
 
-public class FarmAnimal
+public abstract class FarmAnimal
 {
     private String name;
     private String sound;
@@ -20,5 +20,7 @@ public class FarmAnimal
     {
         return sound;
     }
+
+    public abstract void eat();
 
 }

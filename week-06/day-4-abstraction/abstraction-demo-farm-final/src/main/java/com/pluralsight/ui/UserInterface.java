@@ -27,6 +27,7 @@ public class UserInterface
             System.out.println();
             System.out.println("What do you want to do next? ");
             System.out.println("1) Sing the song");
+            System.out.println("2) Feed the Animals");
             System.out.println("0) Exit");
             System.out.print("Select an option: ");
             String userInput = input.nextLine().trim();
@@ -57,14 +58,19 @@ public class UserInterface
     }
 
 
-    public void singVerse(String name, String sound)
+    public void singVerse(FarmAnimal animal) throws InterruptedException
     {
+        String name = animal.getName();
+        String sound = animal.getSound();
+
         System.out.println("Old MacDonald had a farm, ee, ay, ee, ay, oh!");
         System.out.println("And on his farm he had a " + name + ", ee, ay, ee, ay, oh!");
         System.out.println("With a " + sound + " " + sound + " here");
         System.out.println("And a " + sound + " " + sound + " there");
         System.out.println("Here a " + sound + " there a " + sound + " everywhere a " + sound + " " + sound);
         System.out.println();
+
+        Thread.sleep(500);
     }
 
     public void sayGoodbye()

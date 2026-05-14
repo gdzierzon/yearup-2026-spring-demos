@@ -8,4 +8,9 @@ public class Pig extends FarmAnimal
         super("Pig", "oink!");
     }
 
+    @Override
+    public void eat()
+    {
+        System.out.println(getName() + " slurps slop");
+    }
 }

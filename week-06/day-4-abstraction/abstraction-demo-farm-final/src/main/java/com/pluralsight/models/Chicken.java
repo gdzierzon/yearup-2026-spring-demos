@@ -13,4 +13,9 @@ public class Chicken extends FarmAnimal
         System.out.println("Chicken laid an egg!");
     }
 
+    @Override
+    public void eat()
+    {
+        System.out.println(getName() + " pecks seeds");
+    }
 }

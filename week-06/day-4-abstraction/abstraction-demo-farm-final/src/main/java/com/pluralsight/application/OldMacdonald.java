@@ -10,20 +10,27 @@ public class OldMacdonald
 {
     UserInterface userInterface = new UserInterface();
 
-    private ArrayList<FarmAnimal> farmAnimals;
+    ArrayList<FarmAnimal> animals = new ArrayList<>();
 
     public OldMacdonald()
     {
-        farmAnimals = new ArrayList<>();
+        FarmAnimal animal = new Sheep();
 
-        // add all animals
-        farmAnimals.add(new Cow());
-        farmAnimals.add(new Chicken());
-        farmAnimals.add(new Pig());
+        animals.add(new Cow());
+        animals.add(new Chicken());
+        animals.add(new Pig());
+        animals.add(new Sheep());
+
+        Cow cow = new Cow();
+        cow.setEating(true);
+        animals.add(cow);
+
+        // can't create a FarmAnimal directly
+        //  animals.add(new FarmAnimal("Wolf", "GRRRR!!!"));
 
     }
 
-    public void run()
+    public void run() throws InterruptedException
     {
         userInterface.sayHello();
 
@@ -35,6 +42,10 @@ public class OldMacdonald
             {
                 singSong();
             }
+            else if(choice ==2)
+            {
+                feedAnimals();
+            }
             else
             {
                 userInterface.sayGoodbye();
@@ -43,17 +54,24 @@ public class OldMacdonald
         }
     }
 
-    private void singSong()
+    private void feedAnimals()
+    {
+        for(FarmAnimal animal: animals)
+        {
+            animal.eat();
+        }
+    }
+
+    private void singSong() throws InterruptedException
     {
         userInterface.singSongIntro();
 
-        Cow cow = new Cow();
-        Chicken chicken = new Chicken();
-        Pig pig = new Pig();
 
-        userInterface.singVerse(cow.getName(), cow.getSound());
-        userInterface.singVerse(chicken.getName(), chicken.getSound());
-        userInterface.singVerse(pig.getName(), pig.getSound());
+        for (FarmAnimal animal: animals)
+        {
+            userInterface.singVerse(animal);
+        }
+
 
     }
 
