@@ -22,6 +22,9 @@ public class InterfacesApplication
             System.out.println();
         }
 
+        RobotVacuum robot = new RobotVacuum();
+        robot.print();
+
     }
 
     public void moveAround(Movable mover)

@@ -1,6 +1,6 @@
 package com.pluralsight.models;
 
-public class RobotVacuum extends Robot implements Movable, Cleaner
+public class RobotVacuum extends Robot implements Cleaner
 {
     private boolean isCleaning = false;
 
@@ -60,5 +60,12 @@ public class RobotVacuum extends Robot implements Movable, Cleaner
             System.out.println("and is cleaning");
         }
         System.out.println("And then will rest");
+    }
+
+    @Override
+    public void print()
+    {
+        super.print();
+        Cleaner.super.print();
     }
 }
