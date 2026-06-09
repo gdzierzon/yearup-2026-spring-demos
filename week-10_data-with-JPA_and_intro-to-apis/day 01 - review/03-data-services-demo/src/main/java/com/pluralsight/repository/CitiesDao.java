@@ -1,4 +1,4 @@
-package com.pluralsight.services;
+package com.pluralsight.repository;
 
 import com.pluralsight.models.City;
 
