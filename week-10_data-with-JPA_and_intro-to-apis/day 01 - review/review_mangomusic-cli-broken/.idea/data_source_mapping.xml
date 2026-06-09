@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DataSourcePerFileMappings">
+    <file url="file://$PROJECT_DIR$/db_scripts/album_count.sql" value="f088deed-dfad-4a03-96d1-7a5bd6d19a8d" />
+    <file url="file://$PROJECT_DIR$/db_scripts/album_count_temp_table.sql" value="f088deed-dfad-4a03-96d1-7a5bd6d19a8d" />
+    <file url="file://$PROJECT_DIR$/db_scripts/album_count_view.sql" value="f088deed-dfad-4a03-96d1-7a5bd6d19a8d" />
+    <file url="file://$PROJECT_DIR$/db_scripts/album_count_with_cte.sql" value="f088deed-dfad-4a03-96d1-7a5bd6d19a8d" />
+    <file url="file://$PROJECT_DIR$/db_scripts/queries.sql" value="f088deed-dfad-4a03-96d1-7a5bd6d19a8d" />
+    <file url="file://$PROJECT_DIR$/src/main/java/com/mangomusic/data/ReportsDao.java" value="f088deed-dfad-4a03-96d1-7a5bd6d19a8d" />
+    <file url="file://$PROJECT_DIR$/src/main/java/com/mangomusic/data/UserDao.java" value="f088deed-dfad-4a03-96d1-7a5bd6d19a8d" />
+  </component>
+</project>

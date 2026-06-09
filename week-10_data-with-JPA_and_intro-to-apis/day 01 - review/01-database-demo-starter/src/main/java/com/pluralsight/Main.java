@@ -33,14 +33,14 @@ public class Main
                     FROM city;
                     """;
             Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery(sql);
+            ResultSet row = statement.executeQuery(sql);
 
             // 2 a. - read the results
-            while(resultSet.next())
+            while(row.next())
             {
-                int id = resultSet.getInt("Id");
-                String name = resultSet.getString("Name");
-                String country = resultSet.getString("CountryCode");
+                int id = row.getInt("Id");
+                String name = row.getString("Name");
+                String country = row.getString("CountryCode");
 
                 System.out.printf("%3d  %-30s %s\n", id, name, country);
             }
