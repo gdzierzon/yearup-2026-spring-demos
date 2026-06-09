@@ -8,6 +8,8 @@ import org.springframework.context.annotation.Configuration;
 
 import javax.sql.DataSource;
 
+// This is a Spring Bean
+// because of @Configuration
 @Configuration
 public class DatabaseConfiguration
 {
