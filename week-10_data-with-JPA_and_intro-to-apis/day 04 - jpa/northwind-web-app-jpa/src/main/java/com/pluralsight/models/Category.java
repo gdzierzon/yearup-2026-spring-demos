@@ -1,49 +1,28 @@
 package com.pluralsight.models;
 
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Entity
+@Table(name="categories")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class Category
 {
-    private int categoryId;
+    @Id
+    @Column(name="CategoryID")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer categoryId;
+
+    @Column(name = "CategoryName")
     private String categoryName;
+
+    @Column(name="Description")
     private String description;
 
-    public Category(int categoryId, String categoryName, String description)
-    {
-        this.categoryId = categoryId;
-        this.categoryName = categoryName;
-        this.description = description;
-    }
-
-    public Category()
-    {
-    }
-
-    public int getCategoryId()
-    {
-        return categoryId;
-    }
-
-    public void setCategoryId(int categoryId)
-    {
-        this.categoryId = categoryId;
-    }
-
-    public String getCategoryName()
-    {
-        return categoryName;
-    }
-
-    public void setCategoryName(String categoryName)
-    {
-        this.categoryName = categoryName;
-    }
-
-    public String getDescription()
-    {
-        return description;
-    }
-
-    public void setDescription(String description)
-    {
-        this.description = description;
-    }
 }
