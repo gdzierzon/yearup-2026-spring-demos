@@ -46,18 +46,19 @@ public class CategoriesController
     }
 
     @PostMapping("")
-    @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<Category> addCategory(@RequestBody Category category)
     {
         var newCategory = categoriesService.addCategory(category);
 
         URI location = URI.create("/categories/" + category.getCategoryId());
 
+        // created = status 201
+        // location = REST expects us to return the URL of the new object
+        // body = pass back the new object
         return ResponseEntity.created(location).body(newCategory);
     }
 
     @PutMapping("{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<Void> update(@PathVariable int id, @RequestBody Category category)
     {
         categoriesService.updateCategory(id, category);
@@ -66,11 +67,11 @@ public class CategoriesController
     }
 
     @DeleteMapping("{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<Void> delete(@PathVariable int id)
     {
         categoriesService.deleteCategory(id);
 
+        // noContent = status 204
         return ResponseEntity.noContent().build();
     }
 }
