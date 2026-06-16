@@ -21,7 +21,7 @@ public class ProductsService
 
     public List<Product> findAllProducts()
     {
-        var products = repository.findAllByCategory_CategoryName("Beverages");
+        var products = repository.findAll();
 
         return products;
     }
