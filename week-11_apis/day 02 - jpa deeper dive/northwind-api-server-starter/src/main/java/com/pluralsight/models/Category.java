@@ -31,6 +31,6 @@ public class Category
 
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
-    private List<Product> productList = new ArrayList<>();
+    private List<Product> products = new ArrayList<>();
 
 }

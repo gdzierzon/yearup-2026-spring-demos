@@ -46,6 +46,17 @@ main {
     padding: 18px;
 }
 
+.split-panel
+{
+    display: flex;
+    flex-direction: row;
+}
+
+.search-panel
+{
+    width: 25%;
+    padding-right: 20px;
+}
 .form-panel {
     background-color: #fff;
     border: solid 1px #ddd;

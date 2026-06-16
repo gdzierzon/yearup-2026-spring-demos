@@ -1,5 +1,11 @@
 function showMessage(message) {
     templateBuilder.append('message', { message }, 'messages');
+
+    // timeout find the messages div and clear it
+    setTimeout(function() {
+        const div = document.getElementById("messages");
+        div.innerText =''
+    }, 2000);
 }
 
 function showError(error) {
@@ -24,6 +30,21 @@ function showCategories() {
 
 function showProducts() {
     productService.loadProducts();
+}
+
+function searchProducts() {
+    const categoryName = document.getElementById("searchCategoryName").value
+    const productName = document.getElementById("searchProductName").value
+    const minPrice = document.getElementById("searchMinPrice").value
+    const maxPrice = document.getElementById("searchMaxPrice").value
+    let url = ""
+    if(categoryName) url += `&category=${categoryName}`
+    if(productName) url += `&name=${productName}`
+    if(minPrice) url += `&minprice=${minPrice}`
+    if(maxPrice) url += `&maxprice=${maxPrice}`
+
+    if(url.length === 0) url = null
+    productService.loadProducts(url);
 }
 
 function newCustomer() {

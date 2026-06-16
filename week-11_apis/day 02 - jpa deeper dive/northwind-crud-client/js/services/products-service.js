@@ -4,8 +4,13 @@ class ProductService {
     products = [];
     editingId = null;
 
-    loadProducts() {
-        axios.get(`${config.baseUrl}/products`)
+    loadProducts(queryString) {
+
+        const url = (queryString)
+                ?`${config.baseUrl}/products?${queryString}`
+                : `${config.baseUrl}/products`
+
+        axios.get(url)
             .then(response => {
                 this.products = response.data.map(p => ({
                     ...p,

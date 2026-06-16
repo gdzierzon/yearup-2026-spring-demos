@@ -6,10 +6,12 @@ package com.pluralsight.controllers;
 import com.pluralsight.models.Category;
 import com.pluralsight.models.Product;
 import com.pluralsight.services.ProductsService;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.net.URI;
 import java.util.List;
 
@@ -28,9 +30,14 @@ public class ProductsController
 
 
     @GetMapping("")
-    public ResponseEntity<List<Product>> getAll()
+    public ResponseEntity<List<Product>> getAll(
+            @RequestParam(name="name", required = false) String name,
+            @RequestParam(name="minprice", required = false) BigDecimal min,
+            @RequestParam(name="maxprice", required = false) BigDecimal max,
+            @RequestParam(name="category", required = false) String category
+    )
     {
-        var products = productsService.findAllProducts();
+        var products = productsService.findAllProducts(name, min, max, category);
 
         return ResponseEntity.ok(products);
     }

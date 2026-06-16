@@ -6,6 +6,7 @@ import com.pluralsight.repositories.ProductsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Service
@@ -19,9 +20,9 @@ public class ProductsService
         this.repository = repository;
     }
 
-    public List<Product> findAllProducts()
+    public List<Product> findAllProducts(String name, BigDecimal min, BigDecimal max, String category)
     {
-        var products = repository.findAll();
+        List<Product> products = repository.search(name, min, max, category);
 
         return products;
     }

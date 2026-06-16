@@ -8,7 +8,24 @@
 
 <section id="product-form" class="form-panel hidden"></section>
 
-<section class="content-panel">
+<section class="content-panel split-panel">
+    <div class="search-panel">
+
+        <label for="searchCategoryName" class="form-label">Category Name</label>
+        <input id="searchCategoryName" class="form-control mb-4" >
+
+        <label for="searchProductName" class="form-label">Product Name</label>
+        <input id="searchProductName" class="form-control mb-4" >
+
+        <label for="searchMinPrice" class="form-label">Min Price</label>
+        <input id="searchMinPrice" class="form-control mb-4" >
+
+        <label for="searchMaxPrice" class="form-label">Max Price</label>
+        <input id="searchMaxPrice" class="form-control" >
+
+
+        <button class="btn btn-success mt-3" onclick="searchProducts()">Search</button>
+    </div>
     <table class="table table-striped table-hover align-middle">
         <thead>
             <tr>
