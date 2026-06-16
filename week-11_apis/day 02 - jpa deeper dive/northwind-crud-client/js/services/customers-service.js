@@ -6,8 +6,13 @@ class CustomerService {
     
 
 
-    loadCustomers() {
-        axios.get(`${config.baseUrl}/customers`)
+    loadCustomers(queryString) {
+
+        const url = (queryString)
+            ?`${config.baseUrl}/customers?${queryString}`
+            : `${config.baseUrl}/customers`
+
+        axios.get(url)
             .then(response => {
                 this.customers = response.data.map(c => ({
                     customerId: c.customerId ?? "",

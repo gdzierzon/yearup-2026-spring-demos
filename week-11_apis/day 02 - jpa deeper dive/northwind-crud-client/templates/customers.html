@@ -8,7 +8,24 @@
 
 <section id="customer-form" class="form-panel hidden"></section>
 
-<section class="content-panel">
+<section class="content-panel split-panel">
+    <div class="search-panel">
+
+        <label for="searchCompany" class="form-label">Company Name</label>
+        <input id="searchCompany" class="form-control mb-4" >
+
+        <label for="searchContact" class="form-label">Contact Name</label>
+        <input id="searchContact" class="form-control mb-4" >
+
+        <label for="searchCity" class="form-label">City</label>
+        <input id="searchCity" class="form-control mb-4" >
+
+        <label for="searchCountry" class="form-label">Country</label>
+        <input id="searchCountry" class="form-control" >
+
+
+        <button class="btn btn-success mt-3" onclick="searchCustomers()">Search</button>
+    </div>
     <table class="table table-striped table-hover align-middle">
         <thead>
             <tr>

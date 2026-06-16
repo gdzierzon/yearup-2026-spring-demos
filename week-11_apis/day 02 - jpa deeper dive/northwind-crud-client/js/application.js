@@ -24,6 +24,22 @@ function showCustomers() {
     customerService.loadCustomers();
 }
 
+function searchCustomers() {
+    const company = document.getElementById("searchCompany").value
+    const contact = document.getElementById("searchContact").value
+    const city = document.getElementById("searchCity").value
+    const country = document.getElementById("searchCountry").value
+
+    let url = ""
+    if(company) url += `&company=${company}`
+    if(contact) url += `&contact=${contact}`
+    if(city) url += `&city=${city}`
+    if(country) url += `&country=${country}`
+
+    if(url.length === 0) url = null
+    customerService.loadCustomers(url);
+}
+
 function showCategories() {
     categoryService.loadCategories();
 }
