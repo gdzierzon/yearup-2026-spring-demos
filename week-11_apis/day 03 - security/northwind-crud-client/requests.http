@@ -1,0 +1,16 @@
+POST http://localhost:8080/products
+Content-Type: application/json
+
+{
+	"productName": "Milk Chocolate",
+	"unitPrice": 4.99,
+    "category": {
+      "categoryId": 3,
+      "categoryName": "Confections",
+      "description": "Desserts, candies, and sweet breads"
+    }
+}
+
+###
+
+GET http://localhost:8080/products?minprice=15&name=ch&maxprice=25&category=Condiments

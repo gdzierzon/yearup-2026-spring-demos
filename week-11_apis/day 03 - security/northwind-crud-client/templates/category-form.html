@@ -1,0 +1,16 @@
+<h3>{{formTitle}}</h3>
+<input type="hidden" id="categoryId" value="{{categoryId}}">
+<div class="form-grid">
+    <div class="wide">
+        <label for="categoryName" class="form-label">Category Name</label>
+        <input id="categoryName" class="form-control" value="{{categoryName}}">
+    </div>
+    <div class="wide">
+        <label for="description" class="form-label">Description</label>
+        <input id="description" class="form-control" value="{{description}}">
+    </div>
+</div>
+<div class="form-actions">
+    <button class="btn btn-success" onclick="saveCategory()">Save</button>
+    <button class="btn btn-secondary" onclick="hideForm('category-form')">Cancel</button>
+</div>

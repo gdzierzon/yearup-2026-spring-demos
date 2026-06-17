@@ -1,0 +1,58 @@
+<section class="page-title">
+    <div>
+        <h1>Customers</h1>
+        <p class="text-muted mb-0">View, add, edit, and delete Northwind customers.</p>
+    </div>
+    <button class="btn btn-primary" onclick="newCustomer()">Add Customer</button>
+</section>
+
+<section id="customer-form" class="form-panel hidden"></section>
+
+<section class="content-panel split-panel">
+    <div class="search-panel">
+
+        <label for="searchCompany" class="form-label">Company Name</label>
+        <input id="searchCompany" class="form-control mb-4" >
+
+        <label for="searchContact" class="form-label">Contact Name</label>
+        <input id="searchContact" class="form-control mb-4" >
+
+        <label for="searchCity" class="form-label">City</label>
+        <input id="searchCity" class="form-control mb-4" >
+
+        <label for="searchCountry" class="form-label">Country</label>
+        <input id="searchCountry" class="form-control" >
+
+
+        <button class="btn btn-success mt-3" onclick="searchCustomers()">Search</button>
+    </div>
+    <table class="table table-striped table-hover align-middle">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Company</th>
+                <th>Contact</th>
+                <th>City</th>
+                <th>State</th>
+                <th>Country</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#customers}}
+            <tr>
+                <td>{{customerId}}</td>
+                <td>{{companyName}}</td>
+                <td>{{contactName}}</td>
+                <td>{{city}}</td>
+                <td>{{state}}</td>
+                <td>{{country}}</td>
+                <td class="table-actions">
+                    <button class="btn btn-sm btn-outline-primary" onclick="editCustomer('{{customerId}}')">Edit</button>
+                    <button class="btn btn-sm btn-outline-danger" onclick="deleteCustomer('{{customerId}}')">Delete</button>
+                </td>
+            </tr>
+            {{/customers}}
+        </tbody>
+    </table>
+</section>
