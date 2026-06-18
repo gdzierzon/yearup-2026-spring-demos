@@ -35,6 +35,8 @@ class CategoryService {
     }
 
     editCategory(id) {
+
+        const token = localStorage.getItem("token");
         axios.get(`${config.baseUrl}/categories/${id}`)
             .then(response => this.showCategoryForm(response.data))
             .catch(() => showError(`Could not load category ${id}.`));
@@ -52,9 +54,10 @@ class CategoryService {
             return;
         }
 
+
         const request = this.editingId
-            ? axios.put(`${config.baseUrl}/categories/${this.editingId}`, category)
-            : axios.post(`${config.baseUrl}/categories`, category);
+            ? axios.put(`${config.baseUrl}/categories/${this.editingId}`, category, authenticationService.getAuthConfig())
+            : axios.post(`${config.baseUrl}/categories`, category, authenticationService.getAuthConfig());
 
         request.then(() => {
                 showMessage(this.editingId ? 'Category updated.' : 'Category added.');
@@ -65,7 +68,7 @@ class CategoryService {
     }
 
     deleteCategory(id) {
-        axios.delete(`${config.baseUrl}/categories/${id}`)
+        axios.delete(`${config.baseUrl}/categories/${id}`, authenticationService.getAuthConfig())
             .then(() => {
                 showMessage('Category deleted.');
                 this.loadCategories();

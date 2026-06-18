@@ -1,0 +1,567 @@
+openapi: 3.0.3
+info:
+  title: Northwind Demo API
+  version: 1.0.0
+  description: |
+    OpenAPI specification for the Northwind REST API.
+
+    This file documents the authentication, categories, customers, and products endpoints
+    found in the provided project.
+servers:
+  - url: http://localhost:8080
+    description: Local Spring Boot server
+
+tags:
+  - name: Authentication
+    description: Login and registration endpoints
+  - name: Categories
+    description: Category CRUD endpoints
+  - name: Products
+    description: Product CRUD endpoints
+  - name: Customers
+    description: Customer CRUD endpoints
+
+security:
+  - bearerAuth: []
+
+paths:
+  /login:
+    post:
+      tags:
+        - Authentication
+      summary: Log in
+      description: Authenticates a user and returns a JWT token.
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginDto'
+            example:
+              username: admin
+              password: password
+      responses:
+        '200':
+          description: Login successful
+          headers:
+            Authorization:
+              description: Bearer JWT token
+              schema:
+                type: string
+                example: Bearer eyJhbGciOiJIUzI1NiJ9...
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginResponseDto'
+        '401':
+          description: Invalid credentials
+        '500':
+          description: Server error
+
+  /register:
+    post:
+      tags:
+        - Authentication
+      summary: Register a new user
+      description: Creates a new user and an empty profile record.
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterUserDto'
+            example:
+              username: newuser
+              password: password
+              confirmPassword: password
+              role: USER
+      responses:
+        '201':
+          description: User created
+          headers:
+            Location:
+              description: Location of the created user resource
+              schema:
+                type: string
+                example: /users/newuser
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: User already exists or invalid request
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: User Already Exists
+        '500':
+          description: Server error
+
+  /categories:
+    get:
+      tags:
+        - Categories
+      summary: Get all categories
+      security: []
+      responses:
+        '200':
+          description: List of categories
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Category'
+    post:
+      tags:
+        - Categories
+      summary: Add a category
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Category'
+            example:
+              categoryName: Beverages
+              description: Soft drinks, coffees, teas, beers, and ales
+      responses:
+        '201':
+          description: Category created
+          headers:
+            Location:
+              description: Location of the created category
+              schema:
+                type: string
+                example: /categories/1
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Category'
+        '401':
+          description: Authentication required
+        '403':
+          description: Admin role required
+
+  /categories/{id}:
+    get:
+      tags:
+        - Categories
+      summary: Get category by ID
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/CategoryId'
+      responses:
+        '200':
+          description: Category found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Category'
+        '401':
+          description: Authentication required
+        '404':
+          description: Category not found
+    put:
+      tags:
+        - Categories
+      summary: Update category
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/CategoryId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Category'
+      responses:
+        '204':
+          description: Category updated
+        '401':
+          description: Authentication required
+        '403':
+          description: Admin role required
+        '404':
+          description: Category not found
+    delete:
+      tags:
+        - Categories
+      summary: Delete category
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/CategoryId'
+      responses:
+        '204':
+          description: Category deleted
+        '401':
+          description: Authentication required
+        '403':
+          description: Admin role required
+        '404':
+          description: Category not found
+
+  /customers:
+    get:
+      tags:
+        - Customers
+      summary: Get all customers
+      responses:
+        '200':
+          description: List of customers
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Customer'
+    post:
+      tags:
+        - Customers
+      summary: Add a customer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Customer'
+      responses:
+        '201':
+          description: Customer created
+          headers:
+            Location:
+              description: Location of the created customer
+              schema:
+                type: string
+                example: /customers/ALFKI
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Customer'
+        '401':
+          description: Authentication required
+
+  /customers/{id}:
+    get:
+      tags:
+        - Customers
+      summary: Get customer by ID
+      parameters:
+        - $ref: '#/components/parameters/CustomerId'
+      responses:
+        '200':
+          description: Customer found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Customer'
+        '404':
+          description: Customer not found
+    put:
+      tags:
+        - Customers
+      summary: Update customer
+      parameters:
+        - $ref: '#/components/parameters/CustomerId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Customer'
+      responses:
+        '204':
+          description: Customer updated
+        '404':
+          description: Customer not found
+    delete:
+      tags:
+        - Customers
+      summary: Delete customer
+      parameters:
+        - $ref: '#/components/parameters/CustomerId'
+      responses:
+        '204':
+          description: Customer deleted
+        '404':
+          description: Customer not found
+
+  /products:
+    get:
+      tags:
+        - Products
+      summary: Search products
+      description: |
+        Returns products, optionally filtered by product name, price range, and category name.
+        Note: the uploaded controller method needs @GetMapping("") for this route to be active.
+      security: []
+      parameters:
+        - name: name
+          in: query
+          required: false
+          schema:
+            type: string
+          description: Product name contains search
+          example: chai
+        - name: minprice
+          in: query
+          required: false
+          schema:
+            type: number
+            format: decimal
+          description: Minimum unit price
+          example: 10
+        - name: maxprice
+          in: query
+          required: false
+          schema:
+            type: number
+            format: decimal
+          description: Maximum unit price
+          example: 50
+        - name: category
+          in: query
+          required: false
+          schema:
+            type: string
+          description: Category name filter
+          example: Beverages
+      responses:
+        '200':
+          description: List of products
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Product'
+    post:
+      tags:
+        - Products
+      summary: Add a product
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Product'
+            example:
+              productName: Chai
+              unitPrice: 18.0
+              category:
+                categoryId: 1
+                categoryName: Beverages
+                description: Soft drinks, coffees, teas, beers, and ales
+      responses:
+        '201':
+          description: Product created
+          headers:
+            Location:
+              description: Location of the created product
+              schema:
+                type: string
+                example: /products/1
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+        '401':
+          description: Authentication required
+
+  /products/{id}:
+    get:
+      tags:
+        - Products
+      summary: Get product by ID
+      parameters:
+        - $ref: '#/components/parameters/ProductId'
+      responses:
+        '200':
+          description: Product found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+        '404':
+          description: Product not found
+    put:
+      tags:
+        - Products
+      summary: Update product
+      parameters:
+        - $ref: '#/components/parameters/ProductId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Product'
+      responses:
+        '204':
+          description: Product updated
+        '404':
+          description: Product not found
+    delete:
+      tags:
+        - Products
+      summary: Delete product
+      parameters:
+        - $ref: '#/components/parameters/ProductId'
+      responses:
+        '204':
+          description: Product deleted
+        '404':
+          description: Product not found
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  parameters:
+    CategoryId:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: integer
+        format: int32
+      example: 1
+    CustomerId:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: string
+      example: ALFKI
+    ProductId:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: integer
+        format: int32
+      example: 1
+
+  schemas:
+    LoginDto:
+      type: object
+      required:
+        - username
+        - password
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+          format: password
+
+    LoginResponseDto:
+      type: object
+      properties:
+        token:
+          type: string
+          description: JWT token returned after login
+        user:
+          $ref: '#/components/schemas/User'
+
+    RegisterUserDto:
+      type: object
+      required:
+        - username
+        - password
+        - confirmPassword
+        - role
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+          format: password
+        confirmPassword:
+          type: string
+          format: password
+        role:
+          type: string
+          example: USER
+
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        username:
+          type: string
+        authorities:
+          type: array
+          items:
+            $ref: '#/components/schemas/Authority'
+        activated:
+          type: boolean
+
+    Authority:
+      type: object
+      properties:
+        name:
+          type: string
+          example: ROLE_ADMIN
+
+    Category:
+      type: object
+      properties:
+        categoryId:
+          type: integer
+          format: int32
+          readOnly: true
+        categoryName:
+          type: string
+        description:
+          type: string
+
+    Customer:
+      type: object
+      properties:
+        customerId:
+          type: string
+          example: ALFKI
+        companyName:
+          type: string
+        contactName:
+          type: string
+        address:
+          type: string
+        city:
+          type: string
+        state:
+          type: string
+          nullable: true
+        zip:
+          type: string
+        country:
+          type: string
+
+    Product:
+      type: object
+      properties:
+        productId:
+          type: integer
+          format: int32
+          readOnly: true
+        productName:
+          type: string
+        unitPrice:
+          type: number
+          format: double
+        category:
+          $ref: '#/components/schemas/Category'

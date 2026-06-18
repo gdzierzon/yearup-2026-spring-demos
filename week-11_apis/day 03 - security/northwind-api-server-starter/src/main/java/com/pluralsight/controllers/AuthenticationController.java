@@ -1,5 +1,6 @@
 package com.pluralsight.controllers;
 
+import com.pluralsight.models.ErrorResponse;
 import com.pluralsight.repositories.ProfilesRepository;
 import com.pluralsight.repositories.UsersRepository;
 import jakarta.annotation.security.PermitAll;
@@ -11,7 +12,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import com.pluralsight.models.Profile;
@@ -46,20 +46,27 @@ public class AuthenticationController
 
     @PostMapping("/login")
     @PermitAll
-    public ResponseEntity<LoginResponseDto> login(@Valid @RequestBody LoginDto loginDto) {
-
-        UsernamePasswordAuthenticationToken authenticationToken =
-                new UsernamePasswordAuthenticationToken(loginDto.getUsername(), loginDto.getPassword());
-
-        Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        String jwt = tokenProvider.createToken(authentication, false);
+    public ResponseEntity<?> login(@Valid @RequestBody LoginDto loginDto) {
 
         try
         {
             User user = usersRepository.getByUserName(loginDto.getUsername());
 
-            if (user == null) throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+            if (user == null)
+            {
+                var error = ErrorResponse.get404();
+                error.addMessage("message", "The username was not found");
+                error.addMessage("userName", loginDto.getUsername());
+
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+            }
+
+            UsernamePasswordAuthenticationToken authenticationToken =
+                    new UsernamePasswordAuthenticationToken(loginDto.getUsername(), loginDto.getPassword());
+
+            Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+            String jwt = tokenProvider.createToken(authentication, false);
 
             return ResponseEntity
                     .ok()

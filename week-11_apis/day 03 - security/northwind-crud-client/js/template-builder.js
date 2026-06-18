@@ -43,7 +43,7 @@ class TemplateBuilder
                      {
                          setTimeout(() => {
                              parent.removeChild(element);
-                         }, 3000);
+                         }, 5000);
                      }
                  }
                  catch(e)

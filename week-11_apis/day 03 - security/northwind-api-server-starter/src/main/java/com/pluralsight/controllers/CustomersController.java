@@ -1,24 +1,23 @@
 package com.pluralsight.controllers;
 
-// all requests related to Categories will
-// be handled by THIS controller
-
-import com.pluralsight.models.Category;
 import com.pluralsight.models.Customer;
+import com.pluralsight.models.ErrorResponse;
 import com.pluralsight.services.CustomersService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
-import java.util.List;
 
 @RestController
 @RequestMapping("/customers")
 @CrossOrigin
+@PreAuthorize("isAuthenticated()")
 public class CustomersController
 {
-    private CustomersService customersService;
+    private final CustomersService customersService;
 
     @Autowired
     public CustomersController(CustomersService customersService)
@@ -28,45 +27,133 @@ public class CustomersController
 
 
     @GetMapping("")
-    public ResponseEntity<List<Customer>> getAll()
+    @PreAuthorize("permitAll()")
+    public ResponseEntity<?> getAll()
     {
-        var categories = customersService.findAllCustomers();
+        try
+        {
+            var categories = customersService.findAllCustomers();
 
-        return ResponseEntity.ok(categories);
+            return ResponseEntity.ok(categories);
+        }
+        catch (Exception ex)
+        {
+            return ResponseEntity.internalServerError().body(ErrorResponse.get500());
+        }
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<Customer> getById(@PathVariable String id)
+    @PreAuthorize("permitAll()")
+    public ResponseEntity<?> getById(@PathVariable String id)
     {
-        var category = customersService.findCustomerById(id);
 
-        return ResponseEntity.ok(category);
+        try
+        {
+            var customer = customersService.findCustomerById(id);
+
+            if (customer.isEmpty())
+            {
+                var error = ErrorResponse.get404();
+                error.addMessage("message", "The customer does not exist");
+                error.addMessage("customerId", id);
+
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+            }
+
+
+            return ResponseEntity.ok(customer.get());
+        }
+        catch (Exception ex)
+        {
+            return ResponseEntity.internalServerError().body(ErrorResponse.get500());
+        }
     }
 
     @PostMapping("")
-    public ResponseEntity<Customer> addCustomer(@RequestBody Customer customer)
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<?> addCustomer(@RequestBody Customer customer)
     {
-        var newCustomer = customersService.addCustomer(customer);
 
-        URI location = URI.create("/categories/" + customer.getCustomerId());
+        try
+        {
+            // don't allow duplicates
+            var existing = customersService.findByCompanyName(customer.getCompanyName());
+            if (existing.isPresent())
+            {
+                var error = ErrorResponse.get400();
+                error.addMessage("message", "Invalid new Customer.");
+                error.addMessage("reason", "A Customer with that name already exists.");
+                error.addMessage("new customer", customer);
+                error.addMessage("existing customer", existing);
 
-        return ResponseEntity.created(location).body(newCustomer);
+                return ResponseEntity.badRequest().body(error);
+            }
+
+            var newCustomer = customersService.addCustomer(customer);
+
+            URI location = URI.create("/categories/" + customer.getCustomerId());
+            return ResponseEntity.created(location).body(newCustomer);
+        }
+        catch (Exception ex)
+        {
+            return ResponseEntity.internalServerError().body(ErrorResponse.get500());
+        }
+
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<Void> update(@PathVariable String id, @RequestBody Customer customer)
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<?> update(@PathVariable String id, @RequestBody Customer customer)
     {
-        customersService.updateCustomer(id, customer);
 
-        return ResponseEntity.noContent().build();
+        try
+        {
+            var existing = customersService.findCustomerById(id);
+
+            if (existing.isEmpty())
+            {
+                var error = ErrorResponse.get404();
+                error.addMessage("message", "Update failed: The customer does not exist");
+                error.addMessage("customerId", id);
+
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+            }
+
+            customersService.updateCustomer(id, customer);
+
+            return ResponseEntity.noContent().build();
+        }
+        catch (Exception ex)
+        {
+            return ResponseEntity.internalServerError().body(ErrorResponse.get500());
+        }
+
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity<Void> delete(@PathVariable String id)
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<?> delete(@PathVariable String id)
     {
-        customersService.deleteCustomer(id);
+        try
+        {
+            var existing = customersService.findCustomerById(id);
 
-        // noContent = status 204
-        return ResponseEntity.noContent().build();
+            if (existing.isEmpty())
+            {
+                var error = ErrorResponse.get404();
+                error.addMessage("message", "Delete failed: The customer does not exist");
+                error.addMessage("customerId", id);
+
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+            }
+
+            customersService.deleteCustomer(id);
+
+            return ResponseEntity.noContent().build();
+        }
+        catch (Exception ex)
+        {
+            return ResponseEntity.internalServerError().body(ErrorResponse.get500());
+        }
     }
 }

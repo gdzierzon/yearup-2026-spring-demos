@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CategoriesService
@@ -25,11 +26,18 @@ public class CategoriesService
         return categories;
     }
 
-    public Category findCategoryById(int id)
+    public Optional<Category> findCategoryById(int id)
     {
-        var category = repository.findById(id).get();
+        var category = repository.findById(id);
 
         return category;
+    }
+
+    public List<Category> findCategoriesByName(String name)
+    {
+        var categories = repository.findAllByCategoryName(name);
+
+        return categories;
     }
 
     public Category addCategory(Category category)

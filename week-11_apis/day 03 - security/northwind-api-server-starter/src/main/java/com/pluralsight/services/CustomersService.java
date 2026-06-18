@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CustomersService
@@ -25,9 +26,16 @@ public class CustomersService
         return customers;
     }
 
-    public Customer findCustomerById(String id)
+    public Optional<Customer> findCustomerById(String id)
     {
-        var customer = repository.findById(id).get();
+        var customer = repository.findById(id);
+
+        return customer;
+    }
+
+    public Optional<Customer> findByCompanyName(String name)
+    {
+        var customer = repository.findByCompanyName(name);
 
         return customer;
     }

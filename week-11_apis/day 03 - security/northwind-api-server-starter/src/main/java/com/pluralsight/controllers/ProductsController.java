@@ -1,28 +1,25 @@
 package com.pluralsight.controllers;
 
-// all requests related to Products will
-// be handled by THIS controller
 
-import com.pluralsight.models.Category;
+import com.pluralsight.models.ErrorResponse;
 import com.pluralsight.models.Product;
 import com.pluralsight.services.ProductsService;
-import jakarta.annotation.security.PermitAll;
-import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.net.URI;
-import java.util.List;
 
 @RestController
 @RequestMapping("/products")
 @CrossOrigin
+@PreAuthorize("isAuthenticated()")
 public class ProductsController
 {
-    private ProductsService productsService;
+    private final ProductsService productsService;
 
     @Autowired
     public ProductsController(ProductsService productsService)
@@ -31,51 +28,136 @@ public class ProductsController
     }
 
 
-    @PermitAll
-    public ResponseEntity<List<Product>> getAll(
+    @GetMapping()
+    @PreAuthorize("permitAll()")
+    public ResponseEntity<?> findAll(
             @RequestParam(name="name", required = false) String name,
             @RequestParam(name="minprice", required = false) BigDecimal min,
             @RequestParam(name="maxprice", required = false) BigDecimal max,
             @RequestParam(name="category", required = false) String category
     )
     {
-        var products = productsService.findAllProducts(name, min, max, category);
+        try
+        {
+            var products = productsService.findAllProducts(name, min, max, category);
 
-        return ResponseEntity.ok(products);
+            return ResponseEntity.ok(products);
+        }
+        catch(Exception ex)
+        {
+            return ResponseEntity.internalServerError().body(ErrorResponse.get500());
+        }
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<Product> getById(@PathVariable int id)
+    @PreAuthorize("permitAll()")
+    public ResponseEntity<?> findById(@PathVariable int id)
     {
-        var product = productsService.findByProductId(id);
+        try
+        {
+            var product = productsService.findByProductId(id);
 
-        return ResponseEntity.ok(product);
+            if (product.isEmpty())
+            {
+                var error = ErrorResponse.get404();
+                error.addMessage("message", "The product does not exist");
+                error.addMessage("productId", id);
+
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+            }
+
+            return ResponseEntity.ok(product.get());
+        }
+        catch (Exception ex)
+        {
+            return ResponseEntity.internalServerError().body(ErrorResponse.get500());
+        }
     }
 
     @PostMapping("")
-    public ResponseEntity<Product> addCategory(@RequestBody Product product)
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<?> create(@RequestBody Product product)
     {
-        var newProduct = productsService.addProduct(product);
+        try
+        {
+            // don't allow duplicates
+            var existing = productsService.findAllByProductName(product.getProductName());
+            if (!existing.isEmpty())
+            {
+                var error = ErrorResponse.get400();
+                error.addMessage("message", "Invalid new Product");
+                error.addMessage("reason", "A product with that name already exists.");
+                error.addMessage("new product", product);
+                error.addMessage("existing product", existing);
 
-        URI location = URI.create("/products/" + product.getProductId());
+                return ResponseEntity.badRequest().body(error);
+            }
+            var newProduct = productsService.addProduct(product);
 
-        return ResponseEntity.created(location).body(newProduct);
+            URI location = URI.create("/products/" + product.getProductId());
+            return ResponseEntity.created(location).body(newProduct);
+
+        }
+        catch (Exception ex)
+        {
+            return ResponseEntity.internalServerError().body(ErrorResponse.get500());
+        }
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<Void> update(@PathVariable int id, @RequestBody Product product)
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<?> update(@PathVariable int id, @RequestBody Product product)
     {
-        productsService.updateProduct(id, product);
 
-        return ResponseEntity.noContent().build();
+        try
+        {
+            var existing = productsService.findByProductId(id);
+
+            if (existing.isEmpty())
+            {
+                var error = ErrorResponse.get404();
+                error.addMessage("message", "Update failed: The product does not exist");
+                error.addMessage("productId", id);
+
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+            }
+
+            productsService.updateProduct(id, product);
+
+            return ResponseEntity.noContent().build();
+        }
+        catch (Exception ex)
+        {
+            return ResponseEntity.internalServerError().body(ErrorResponse.get500());
+        }
+
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity<Void> delete(@PathVariable int id)
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<?> delete(@PathVariable int id)
     {
-        productsService.deleteProduct(id);
+        try
+        {
+            var existing = productsService.findByProductId(id);
 
-        // noContent = status 204
-        return ResponseEntity.noContent().build();
+            if (existing.isEmpty())
+            {
+                var error = ErrorResponse.get404();
+                error.addMessage("message", "Delete failed: The product does not exist");
+                error.addMessage("productId", id);
+
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+            }
+
+            productsService.deleteProduct(id);
+
+            // noContent = status 204
+            return ResponseEntity.noContent().build();
+        }
+        catch (Exception ex)
+        {
+            return ResponseEntity.internalServerError().body(ErrorResponse.get500());
+        }
     }
 }

@@ -75,8 +75,8 @@ class ProductService {
         }
 
         const request = this.editingId
-            ? axios.put(`${config.baseUrl}/products/${this.editingId}`, product)
-            : axios.post(`${config.baseUrl}/products`, product);
+            ? axios.put(`${config.baseUrl}/products/${this.editingId}`, product, authenticationService.getAuthConfig())
+            : axios.post(`${config.baseUrl}/products`, product, authenticationService.getAuthConfig());
 
         request.then(() => {
                 showMessage(this.editingId ? 'Product updated.' : 'Product added.');
@@ -87,7 +87,7 @@ class ProductService {
     }
 
     deleteProduct(id) {
-        axios.delete(`${config.baseUrl}/products/${id}`)
+        axios.delete(`${config.baseUrl}/products/${id}`, authenticationService.getAuthConfig())
             .then(() => {
                 showMessage('Product deleted.');
                 this.loadProducts();

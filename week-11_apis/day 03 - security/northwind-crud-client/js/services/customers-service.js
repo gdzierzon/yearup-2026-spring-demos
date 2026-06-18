@@ -3,7 +3,17 @@ let customerService;
 class CustomerService {
     customers = [];
     editingId = null;
-    
+
+    getAuthConfig()
+    {
+        const token = localStorage.getItem("token");
+
+        return {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        };
+    }
 
 
     loadCustomers(queryString) {
@@ -74,8 +84,8 @@ class CustomerService {
         }
 
         const request = this.editingId
-            ? axios.put(`${config.baseUrl}/customers/${this.editingId}`, customer)
-            : axios.post(`${config.baseUrl}/customers`, customer);
+            ? axios.put(`${config.baseUrl}/customers/${this.editingId}`, customer, authenticationService.getAuthConfig())
+            : axios.post(`${config.baseUrl}/customers`, customer, authenticationService.getAuthConfig());
 
         request.then(() => {
                 showMessage(this.editingId ? 'Customer updated.' : 'Customer added.');
@@ -86,7 +96,7 @@ class CustomerService {
     }
 
     deleteCustomer(id) {
-        axios.delete(`${config.baseUrl}/customers/${id}`)
+        axios.delete(`${config.baseUrl}/customers/${id}`, authenticationService.getAuthConfig())
             .then(() => {
                 showMessage('Customer deleted.');
                 this.loadCustomers();

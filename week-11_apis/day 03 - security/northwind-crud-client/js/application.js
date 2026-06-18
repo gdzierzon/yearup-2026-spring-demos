@@ -63,6 +63,23 @@ function searchProducts() {
     productService.loadProducts(url);
 }
 
+function showLogin() {
+    authenticationService.showLoginForm();
+}
+
+function showLogout() {
+    localStorage.removeItem("token")
+    showMessage("You are now logged out")
+    customerService.loadCustomers();
+}
+
+function login() {
+    const userName = document.getElementById("userNameBox").value
+    const password = document.getElementById("passwordBox").value
+
+    authenticationService.login(userName, password);
+}
+
 function newCustomer() {
     customerService.showCustomerForm();
 }

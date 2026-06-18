@@ -1,6 +1,5 @@
 package com.pluralsight.services;
 
-import com.pluralsight.models.Category;
 import com.pluralsight.models.Product;
 import com.pluralsight.repositories.ProductsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ProductsService
@@ -37,11 +37,18 @@ public class ProductsService
                 .toList();
     }
 
-    public Product findByProductId(int id)
+    public Optional<Product> findByProductId(int id)
     {
-        var product = repository.findById(id).get();
+        var product = repository.findById(id);
 
         return product;
+    }
+
+    public List<Product> findAllByProductName(String name)
+    {
+        var products = repository.findAllByProductName(name);
+
+        return products;
     }
 
     public Product addProduct(Product product)

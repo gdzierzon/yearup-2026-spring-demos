@@ -4,28 +4,25 @@ package com.pluralsight.controllers;
 // be handled by THIS controller
 
 import com.pluralsight.models.Category;
+import com.pluralsight.models.ErrorResponse;
 import com.pluralsight.services.CategoriesService;
-import jakarta.annotation.security.PermitAll;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.net.URI;
-import java.sql.SQLException;
-import java.util.List;
 
 @RestController
 @RequestMapping("/categories")
 @CrossOrigin
-
+@PreAuthorize("isAuthenticated()")
 public class CategoriesController
 {
-    private CategoriesService categoriesService;
+    private final CategoriesService categoriesService;
 
     @Autowired
     public CategoriesController(CategoriesService categoriesService)
@@ -35,50 +32,130 @@ public class CategoriesController
 
 
     @GetMapping("")
-    @PermitAll
-    public ResponseEntity<List<Category>> getAll(HttpServletRequest request)
+    @PreAuthorize("permitAll()")
+    public ResponseEntity<?> findAll(HttpServletRequest request)
     {
-        var categories = categoriesService.findAllCategories();
+        try
+        {
+            var categories = categoriesService.findAllCategories();
 
-        return ResponseEntity.ok(categories);
+            return ResponseEntity.ok(categories);
+        }
+        catch (Exception ex)
+        {
+            return ResponseEntity.internalServerError().body(ErrorResponse.get500());
+        }
     }
 
     @GetMapping("{id}")
-    @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<Category> getById(@PathVariable int id)
+    @PreAuthorize("permitAll()")
+    public ResponseEntity<?> findById(@PathVariable int id)
     {
-        var category = categoriesService.findCategoryById(id);
+        try
+        {
+            var category = categoriesService.findCategoryById(id);
 
-        return ResponseEntity.ok(category);
+            if (category.isEmpty())
+            {
+                var error = ErrorResponse.get404();
+                error.addMessage("message", "The category does not exist");
+                error.addMessage("categoryId", id);
+
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+            }
+
+            return ResponseEntity.ok(category.get());
+        }
+        catch (Exception ex)
+        {
+            return ResponseEntity.internalServerError().body(ErrorResponse.get500());
+        }
     }
 
     @PostMapping("")
-    @Secured("ROLE_ADMIN")
-    public ResponseEntity<Category> addCategory(@RequestBody Category category)
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<?> create(@Valid @RequestBody Category category)
     {
-        var newCategory = categoriesService.addCategory(category);
+        try
+        {
+            // don't allow duplicates
+            var existing = categoriesService.findCategoriesByName(category.getCategoryName());
+            if (!existing.isEmpty())
+            {
+                var error = ErrorResponse.get400();
+                error.addMessage("message", "Invalid new Category.");
+                error.addMessage("reason", "A category with that name already exists.");
+                error.addMessage("new category", category);
+                error.addMessage("existing category", existing);
 
-        URI location = URI.create("/categories/" + category.getCategoryId());
+                return ResponseEntity.badRequest().body(error);
+            }
 
-        return ResponseEntity.created(location).body(newCategory);
+            var newCategory = categoriesService.addCategory(category);
+
+            URI location = URI.create("/categories/" + category.getCategoryId());
+            return ResponseEntity.created(location).body(newCategory);
+        }
+        catch (Exception ex)
+        {
+            return ResponseEntity.internalServerError().body(ErrorResponse.get500());
+        }
     }
 
     @PutMapping("{id}")
-    @Secured("ROLE_ADMIN")
-    public ResponseEntity<Void> update(@PathVariable int id, @RequestBody Category category)
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<?> update(@PathVariable int id, @RequestBody Category category)
     {
-        categoriesService.updateCategory(id, category);
+        try
+        {
+            var existingCategory = categoriesService.findCategoryById(id);
 
-        return ResponseEntity.noContent().build();
+            if (existingCategory.isEmpty())
+            {
+                var error = ErrorResponse.get404();
+                error.addMessage("message", "Update failed: The category does not exist");
+                error.addMessage("categoryId", id);
+
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+            }
+
+            categoriesService.updateCategory(id, category);
+
+            return ResponseEntity.noContent().build();
+        }
+        catch (Exception ex)
+        {
+            return ResponseEntity.internalServerError().body(ErrorResponse.get500());
+        }
     }
 
     @DeleteMapping("{id}")
-    @Secured("ROLE_ADMIN")
-    public ResponseEntity<Void> delete(@PathVariable int id)
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<?> delete(@PathVariable int id)
     {
-        categoriesService.deleteCategory(id);
 
-        // noContent = status 204
-        return ResponseEntity.noContent().build();
+        try
+        {
+            var existingCategory = categoriesService.findCategoryById(id);
+
+            if (existingCategory.isEmpty())
+            {
+                var error = ErrorResponse.get404();
+                error.addMessage("message", "Delete failed: The category does not exist");
+                error.addMessage("categoryId", id);
+
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+            }
+
+            categoriesService.deleteCategory(id);
+
+            // noContent = status 204
+            return ResponseEntity.noContent().build();
+        }
+        catch (Exception ex)
+        {
+            return ResponseEntity.internalServerError().body(ErrorResponse.get500());
+        }
+
     }
 }
